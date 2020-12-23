@@ -29,14 +29,15 @@ public class FirstFragment extends Fragment {
 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    private void invert(){
+    private void invert() throws InterruptedException {
         Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-
+        /*
         for(int i = 0; i < bitmap.getWidth(); ++i)
             for(int j = 0; j < bitmap.getHeight(); ++j){
                 Color color = bitmap.getColor(i,j);
                 mutableBitmap.setPixel(i,j, Color.argb((float)1.0,1 - color.red(),1- color.green(),1- color.blue()));
-            }
+            }*/
+        new ThreadManage(bitmap, mutableBitmap).filter(1);
         img.setImageBitmap(mutableBitmap);
         bitmap =  null;
         bitmap =  mutableBitmap;
@@ -79,7 +80,11 @@ public class FirstFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View view) {
-                invert();
+                try {
+                    invert();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
