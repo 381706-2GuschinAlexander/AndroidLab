@@ -19,11 +19,14 @@ import android.net.Uri;
 public class FirstFragment extends Fragment {
     Integer READ_IMG = 1;
     ImageView img;
-    Bitmap bitmap;
+    Bitmap bitmap = null;
+    Bitmap backupBitmap = null;
 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void filter() throws InterruptedException {
+        if(bitmap == null)
+            return;
         MainActivity t = (MainActivity)getActivity();
         int type = t.type;
         Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -48,6 +51,7 @@ public class FirstFragment extends Fragment {
             img.setImageURI(selectedImageURI);
             BitmapDrawable drawable = (BitmapDrawable) img.getDrawable();
             bitmap = drawable.getBitmap();
+            backupBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         }
     }
 
@@ -74,6 +78,16 @@ public class FirstFragment extends Fragment {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        view.findViewById(R.id.button_third).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(backupBitmap == null)
+                    return;
+                img.setImageBitmap(backupBitmap);
+                bitmap = backupBitmap.copy(Bitmap.Config.ARGB_8888, true);
             }
         });
     }

@@ -33,7 +33,7 @@ public class FilterThread implements Runnable{
                     int Gx = source[(i + 1) * width + j + 1] - source[i * width + j];
                     int Gy = source[i * width + j + 1] - source[(i + 1) * width + j];
 
-                    dest[i * width + j] = (((int) Math.sqrt(Gx * Gx + Gy * Gy + 1) * 255) / 361 > 70 ? WHITE_PIXEL : BLACK_PIXEL);
+                    dest[i * width + j] = (((int) Math.sqrt(Gx * Gx + Gy * Gy + 1) * 255) / 361 > 30 ? WHITE_PIXEL : BLACK_PIXEL);
                 }
             }
         if(type == 2)
@@ -55,7 +55,7 @@ public class FilterThread implements Runnable{
                     int Gy = source[(i + 1) * width + j - 1] + 2 * source[(i + 1) * width + j] + source[(i + 1) * width + j + 1]
                             - source[(i - 1) * width + j - 1] -  2 * source[(i - 1) * width + j] - source[(i - 1) * width + j +1];
 
-                    dest[i * width + j] = (((int)Math.sqrt(Gx * Gx + Gy * Gy) * 255)/ 2885 > 26 ? WHITE_PIXEL : BLACK_PIXEL);
+                    dest[i * width + j] = (((int)Math.sqrt(Gx * Gx + Gy * Gy) * 255)/ 2885 > 20 ? WHITE_PIXEL : BLACK_PIXEL);
                 }
     }
 }
