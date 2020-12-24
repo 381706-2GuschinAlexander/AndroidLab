@@ -2,18 +2,14 @@ package com.example.myapplication;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    int type = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,23 +22,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        menu.add("Roberts");
+        menu.add("Previtta");
+        menu.add("Sobel");
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
+        if(item.getTitle().equals("Roberts"))
+            type = 1;
+        if(item.getTitle().equals("Previtta"))
+            type = 2;
+        if(item.getTitle().equals("Sobel"))
+            type = 3;
         return super.onOptionsItemSelected(item);
     }
 }

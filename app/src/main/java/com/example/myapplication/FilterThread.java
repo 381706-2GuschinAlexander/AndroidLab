@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -9,32 +7,55 @@ import androidx.annotation.RequiresApi;
 public class FilterThread implements Runnable{
     int start = -1;
     int end = 0;
-    int height = -1;
+    int width = -1;
     int[] dest;
     int type;
+    int[] source;
 
-    //int MASK_ALPHA = Integer.parseInt("FF000000", 16);
-    //int MASK_RED = Integer.parseInt("00FF0000", 16);
-    //int MASK_GREEN = Integer.parseInt("0000FF00", 16);
-    //int MASK_BLUE = Integer.parseInt("000000FF", 16);
+    int WHITE_PIXEL = 0xffffffff;
+    int BLACK_PIXEL = 0xff000000;
 
-    FilterThread(int start, int end, int height, int[] dest, int type){
+    FilterThread(int start, int end, int width, int[] dest, int type, int[] source){
         this.start = start;
         this.end = end;
         this.dest = dest;
         this.type = type;
-        this.height = height;
+        this.width = width;
+        this.source = source;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void run() {
-        //int[] source = dest.clone();
         if(type == 1)
+            for(int i = start; i < end; ++i) {
+                for (int j = 0; j < width - 1; ++j) {
+                    int Gx = source[(i + 1) * width + j + 1] - source[i * width + j];
+                    int Gy = source[i * width + j + 1] - source[(i + 1) * width + j];
+
+                    dest[i * width + j] = (((int) Math.sqrt(Gx * Gx + Gy * Gy + 1) * 255) / 361 > 70 ? WHITE_PIXEL : BLACK_PIXEL);
+                }
+            }
+        if(type == 2)
             for(int i = start; i < end; ++i)
-                for(int j = 0; j < height; ++j){
-                    int tmp = dest[i * height + j];
-                    dest[i * height + j] = 0xffffff ^ tmp | 0xff << 24 & tmp;
+                for(int j = 1; j < width-1; ++j){
+                    int Gx = source[(i + 1) * width + j + 1] + source[(i) * width + j + 1] + source[(i - 1) * width + j + 1]
+                            - source[(i + 1) * width + j - 1] -  source[(i) * width + j - 1] - source[(i - 1) * width + j - 1];
+                    int Gy = source[(i + 1) * width + j - 1] + source[(i + 1) * width + j] + source[(i + 1) * width + j + 1]
+                            - source[(i - 1) * width + j - 1] -  source[(i - 1) * width + j] - source[(i - 1) * width + j +1];
+
+                    dest[i * width + j] = (((int)Math.sqrt(Gx * Gx + Gy * Gy) * 255)/ 2165 > 30 ? WHITE_PIXEL : BLACK_PIXEL);
+                }
+
+        if(type == 3)
+            for(int i = start; i < end; ++i)
+                for(int j = 1; j < width-1; ++j){
+                    int Gx = source[(i + 1) * width + j + 1] + 2 * source[(i) * width + j + 1] + source[(i - 1) * width + j + 1]
+                            - source[(i + 1) * width + j - 1] -  2 * source[(i) * width + j - 1] - source[(i - 1) * width + j - 1];
+                    int Gy = source[(i + 1) * width + j - 1] + 2 * source[(i + 1) * width + j] + source[(i + 1) * width + j + 1]
+                            - source[(i - 1) * width + j - 1] -  2 * source[(i - 1) * width + j] - source[(i - 1) * width + j +1];
+
+                    dest[i * width + j] = (((int)Math.sqrt(Gx * Gx + Gy * Gy) * 255)/ 2885 > 26 ? WHITE_PIXEL : BLACK_PIXEL);
                 }
     }
 }
